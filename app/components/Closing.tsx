@@ -42,7 +42,6 @@ export default function Closing() {
             <p className="mt-3 max-w-[36ch] text-[13px] text-[var(--ink-subtle)]">The complaint desk for modern hostels.</p>
             <div className="mt-5 flex gap-2">
               <a href="#cta" className="btn btn-secondary !min-h-[40px] !text-[14px]">Log in</a>
-              <a href="#cta" className="btn btn-primary !min-h-[40px] !text-[14px]">Start free</a>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
