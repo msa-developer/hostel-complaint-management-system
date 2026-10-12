@@ -25,11 +25,9 @@ export default function Closing() {
         <div className="card-lift p-8 text-center md:p-12">
           <h2 className="display-md mx-auto max-w-[18ch]">Fix your first complaint this week</h2>
           <p className="mx-auto mt-3 max-w-[52ch] text-[16px] text-[var(--ink-muted)]">Import blocks, invite wardens, share the student link.</p>
-          <form className="mx-auto mt-7 flex max-w-[480px] flex-col gap-3 sm:flex-row" onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="cta-email" className="sr-only">Work email</label>
-            <input id="cta-email" type="email" required placeholder="you@hostel.edu" className="h-[44px] flex-1 rounded-[8px] border border-[var(--hairline)] bg-white px-3.5 text-[15px] outline-none placeholder:text-[var(--ink-tertiary)] focus:border-[var(--ink)]" />
-            <button type="submit" className="btn btn-primary">Start free trial</button>
-          </form>
+          <div className="mx-auto mt-7 flex max-w-[480px] justify-center">
+            <a href="/sign-up" className="btn btn-primary">Sign up</a>
+          </div>
           <p className="mt-3 font-mono text-[12px] text-[var(--ink-subtle)]">free-block · no-card · 10-min-setup</p>
         </div>
       </section>
