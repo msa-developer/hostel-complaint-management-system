@@ -28,7 +28,8 @@ export default function SignUpPage() {
     });
     setLoading(false);
     if (error) {
-      setError(error.message ?? "Sign up failed");
+      // impeccable: show real server message, not generic fallback.
+      setError(error.message || (error as { code?: string }).code || "Sign up failed");
       return;
     }
     router.push("/dashboard");

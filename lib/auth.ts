@@ -1,14 +1,22 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { nextCookies } from "better-auth/next-js";
-import { getDb } from "./mongo";
+import { getAuthDb, getMongoClient } from "./mongo";
 
 export type Role = "student" | "warden";
 
-const { db } = await getDb();
+// caveman: base URL from env. localhost fallback for dev only.
+const baseURL = process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db),
+  baseURL,
+  // ponytail: same origin + deployed URL. empty strings dropped.
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL,
+    process.env.NEXT_PUBLIC_APP_URL,
+    "https://hostelflix.onrender.com",
+  ].filter((o): o is string => !!o),
+  database: mongodbAdapter(getAuthDb(), { client: getMongoClient() }),
   emailAndPassword: { enabled: true },
   user: {
     additionalFields: {
