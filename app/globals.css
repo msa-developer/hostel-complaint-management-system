@@ -1,26 +1,166 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: #f5f1ec;
+  --surface-1: #ffffff;
+  --surface-2: #ebe7e1;
+  --ink: #111111;
+  --ink-muted: #626260;
+  --ink-subtle: #7b7b78;
+  --ink-tertiary: #9c9fa5;
+  --hairline: #d3cec6;
+  --hairline-soft: #ebe7e1;
+  --accent: #ff5600;
+  --report-blue: #65b5ff;
+  --report-green: #0bdf50;
+  --report-pink: #ff2067;
+  --report-lime: #b3e01c;
+  --report-cyan: #03b2cb;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-surface1: var(--surface-1);
+  --color-surface2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-inkmuted: var(--ink-muted);
+  --color-inksubtle: var(--ink-subtle);
+  --color-hairline: var(--hairline);
+  --color-hairlinesoft: var(--hairline-soft);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection {
+  background: var(--ink);
+  color: var(--canvas);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline);
+  border-radius: 8px;
+  border: 2px solid var(--canvas);
+}
+
+.display-xl {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.display-lg {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.display-md {
+  font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.card-lift {
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+.mockup-lift {
+  background: var(--surface-1);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 10px 18px;
+  border-radius: 8px;
+  min-height: 44px;
+  transition: background 0.18s ease, transform 0.18s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: var(--surface-1);
+  color: var(--ink);
+  border: 1px solid var(--hairline);
+}
+.btn-secondary:hover {
+  background: var(--surface-2);
+}
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-accent:hover {
+  background: #e64d00;
+  transform: translateY(-1px);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.8); }
+}
+.live-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.15s; }
+.rise-3 { animation-delay: 0.25s; }
+.rise-4 { animation-delay: 0.35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .live-dot { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
