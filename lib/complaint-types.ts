@@ -18,6 +18,8 @@ export type ComplaintStatus = (typeof COMPLAINT_STATUSES)[number];
 export type Complaint = {
   _id: string;
   userId: string;
+  studentName: string;
+  studentEmail: string;
   title: string;
   category: ComplaintCategory;
   block: string;
@@ -25,6 +27,13 @@ export type Complaint = {
   description: string;
   priority: ComplaintPriority;
   status: ComplaintStatus;
+  seenByWarden: boolean;
   createdAt: Date;
   updatedAt: Date;
+};
+
+// ponytail: wire shape for API + RSC-to-client props (Dates as ISO strings)
+export type SerializedComplaint = Omit<Complaint, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
 };
