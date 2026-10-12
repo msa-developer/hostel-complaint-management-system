@@ -24,7 +24,6 @@ export default function Navbar() {
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           <a href="#cta" className="btn btn-secondary !min-h-[40px] !py-2">Log in</a>
-          <a href="#cta" className="btn btn-primary !min-h-[40px] !py-2">Start free trial</a>
         </div>
         <button className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-[8px] lg:hidden" onClick={() => setMenu(!menu)} aria-label="Toggle menu" aria-expanded={menu} aria-controls="mobile-menu">
           <span className={`col-start-1 row-start-1 grid place-items-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${menu ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100"}`}>
@@ -44,7 +43,6 @@ export default function Navbar() {
           ))}
             <div className="mt-3 flex gap-2">
               <a href="#cta" onClick={() => setMenu(false)} tabIndex={menu ? 0 : -1} className="btn btn-secondary flex-1">Log in</a>
-              <a href="#cta" onClick={() => setMenu(false)} tabIndex={menu ? 0 : -1} className="btn btn-primary flex-1">Start free trial</a>
             </div>
           </div>
         </div>

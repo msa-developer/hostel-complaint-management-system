@@ -5,36 +5,8 @@ import { FAQS } from "./data";
 
 export default function Closing() {
   const [open, setOpen] = useState<number | null>(0);
-  const [billing, setBilling] = useState<"monthly" | "yearly">("yearly");
-  const plans = [
-    { name: "Starter", price: "Rs.0", per: "free forever", d: "One block, 200 students. Kill the paper register.", feats: ["Unlimited complaints","Warden inbox","Status notifications","1 hostel block"], cta: "Start for free", dark: false },
-    { name: "Campus", price: billing === "monthly" ? "Rs.1,999" : "Rs.1,599", per: "/month", d: "Multi-block hostels needing SLAs and proof.", feats: ["Everything in Starter","SLA timers + alerts","Staff load + analytics","Unlimited blocks + SMS"], cta: "Start free trial", dark: true },
-    { name: "Institution", price: "Custom", per: "", d: "Multi-campus groups with SSO and audits.", feats: ["Everything in Campus","SSO + audit logs","Custom SLAs","Success manager"], cta: "Contact sales", dark: false },
-  ];
   return (
     <>
-      <section id="pricing" className="mx-auto max-w-[1280px] scroll-mt-20 px-5 py-16 md:py-24">
-        <h2 className="display-lg mx-auto max-w-[16ch] text-center">Transparent pricing</h2>
-        <p className="mx-auto mt-4 max-w-[52ch] text-center text-[18px] text-[var(--ink-muted)]">Start free with one block. Pay when you scale.</p>
-        <div className="mx-auto mt-8 flex w-fit items-center gap-1 rounded-full border border-[var(--hairline)] bg-[var(--surface-2)]/60 p-1">
-          {(["monthly","yearly"] as const).map((b) => (
-            <button key={b} onClick={() => setBilling(b)} className={"rounded-full px-5 py-2 text-[14px] font-medium capitalize " + (billing === b ? "bg-white text-[var(--ink)]" : "text-[var(--ink-muted)]")}>{b}{b === "yearly" ? " -20%" : ""}</button>
-          ))}
-        </div>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {plans.map((p) => (
-            <div key={p.name} className={"rounded-[12px] p-6 " + (p.dark ? "bg-[var(--ink)] text-white" : "card-lift")}>
-              <h3 className="text-[28px] font-medium">{p.name}</h3>
-              <p className="mt-3"><span className="text-[32px] font-medium">{p.price}</span>{p.per ? <span className={"text-[14px] " + (p.dark ? "text-[#9c9fa5]" : "text-[var(--ink-muted)]")}> {p.per}</span> : null}</p>
-              <p className={"mt-2 text-[14px] " + (p.dark ? "text-[#9c9fa5]" : "text-[var(--ink-muted)]")}>{p.d}</p>
-              <ul className="mt-5 space-y-2.5 text-[14px]">
-                {p.feats.map((f) => (<li key={f} className="flex items-center gap-2.5"><span className={p.dark ? "text-[#0bdf50]" : "text-[#0a7a2e]"}><Icon d={I.check} size={15} /></span>{f}</li>))}
-              </ul>
-              <a href="#cta" className={"btn mt-6 w-full " + (p.dark ? "btn-accent" : "btn-primary")}>{p.cta}</a>
-            </div>
-          ))}
-        </div>
-      </section>
       <section id="faq" className="mx-auto max-w-[860px] scroll-mt-20 px-5 py-8 md:py-12">
         <h2 className="display-md text-center">Questions, answered</h2>
         <div className="mt-8 space-y-3">
@@ -74,7 +46,7 @@ export default function Closing() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-            {[["Product",["Student app","Warden desk","Analytics","Pricing","Live demo"]],["Roles",["Students","Wardens","Staff","Admins"]],["Resources",["Help center","Resolution playbook","Community","Status"]],["Company",["About","Careers","Contact","Privacy","Terms"]]].map(([h, links]) => (
+            {[["Product",["Student app","Warden desk","Analytics","Live demo"]],["Roles",["Students","Wardens","Staff","Admins"]],["Resources",["Help center","Resolution playbook","Community","Status"]],["Company",["About","Careers","Contact","Privacy","Terms"]]].map(([h, links]) => (
               <div key={h as string}><p className="text-[13px] font-medium">{h}</p>
                 <ul className="mt-3 space-y-2.5">
                   {(links as string[]).map((l) => (<li key={l}><a href="#top" className="text-[13px] text-[var(--ink-subtle)] hover:text-[var(--ink)]">{l}</a></li>))}
