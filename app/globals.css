@@ -160,7 +160,16 @@ body {
 .rise-4 { animation-delay: 0.35s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise, .live-dot { animation: none; }
+  .rise, .live-dot, .ticket-flash { animation: none; }
   html { scroll-behavior: auto; }
+}
+
+@keyframes ticket-flash {
+  0% { background: rgba(255, 86, 0, 0.10); }
+  100% { background: transparent; }
+}
+.ticket-flash {
+  animation: ticket-flash 1.6s ease-out both;
+  border-radius: 8px;
 }
 

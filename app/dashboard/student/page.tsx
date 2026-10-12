@@ -1,12 +1,17 @@
+import { connection } from "next/server";
 import { requireRole } from "@/lib/session";
 import { getComplaintsByUser, serializeComplaint } from "@/lib/complaints";
 import SignOutButton from "../SignOutButton";
 import ComplaintForm from "./ComplaintForm";
 import StudentTicketList from "./StudentTicketList";
+import StudentStats from "./StudentStats";
 
+// caveman: blocking route. per-user data, no prerender.
 export const instant = false;
 
 export default async function StudentDashboard() {
+  // caveman: per-user data. wait for request, no static cache.
+  await connection();
   const session = await requireRole("student");
   const complaints = await getComplaintsByUser(session.user.id);
   const initial = complaints.map(serializeComplaint);
@@ -25,21 +30,7 @@ export default async function StudentDashboard() {
         Stuck tap, dead Wi-Fi, cold shower — file it here. Wardens pick it up from the inbox.
       </p>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        {[
-          ["Open", String(open), "#65b5ff"],
-          ["In progress", String(progress), "#fe4c02"],
-          ["Resolved", String(resolved), "#0bdf50"],
-        ].map(([label, count, dot]) => (
-          <div key={label} className="card-lift p-5">
-            <p className="flex items-center gap-2 text-[13px] text-[var(--ink-muted)]">
-              <span className="live-dot inline-block h-2 w-2 rounded-full" style={{ background: dot }} />
-              {label}
-            </p>
-            <p className="display-md mt-1">{count}</p>
-          </div>
-        ))}
-      </div>
+      <StudentStats open={open} progress={progress} resolved={resolved} />
 
       <div className="card-lift mt-4 p-6">
         <h2 className="text-[18px] font-medium">New complaint</h2>

@@ -24,7 +24,7 @@ export default function ComplaintForm() {
     <form action={formAction} className="mt-4 space-y-3">
       <div>
         <label htmlFor="title" className="mb-1 block text-[13px] font-medium">
-          What broke?
+          What&apos;s the problem?
         </label>
         <input
           id="title"

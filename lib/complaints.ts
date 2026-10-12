@@ -77,23 +77,37 @@ export async function getAllComplaints(): Promise<Complaint[]> {
 export async function markComplaintsSeenByWarden(): Promise<number> {
   const { db } = await getDb();
   const col = db.collection<ComplaintDoc>("complaints");
+  // caveman: warden open inbox = receipt. unseen open -> seen in-progress. one op.
   const res = await col.updateMany(
+    { seenByWarden: { $ne: true }, status: "open" },
+    { $set: { seenByWarden: true, status: "in-progress", updatedAt: new Date() } }
+  );
+  const rest = await col.updateMany(
     { seenByWarden: { $ne: true } },
     { $set: { seenByWarden: true, updatedAt: new Date() } }
   );
-  return res.modifiedCount;
+  // ponytail: rest covers non-open unseen (in-progress/resolved). sum both passes.
+  return res.modifiedCount + rest.modifiedCount;
 }
 
 export async function markComplaintSeenByWarden(id: string): Promise<Complaint | null> {
   if (!ObjectId.isValid(id)) return null;
   const { db } = await getDb();
   const col = db.collection<ComplaintDoc>("complaints");
+  // caveman: single ticket seen. open -> in-progress only. no touch otherwise.
   const res = await col.findOneAndUpdate(
+    { _id: new ObjectId(id), status: "open" },
+    { $set: { seenByWarden: true, status: "in-progress", updatedAt: new Date() } },
+    { returnDocument: "after" }
+  );
+  if (res) return toComplaint(res);
+  // ponytail: already triaged. mark seen only, keep status.
+  const seen = await col.findOneAndUpdate(
     { _id: new ObjectId(id) },
     { $set: { seenByWarden: true, updatedAt: new Date() } },
     { returnDocument: "after" }
   );
-  return res ? toComplaint(res) : null;
+  return seen ? toComplaint(seen) : null;
 }
 
 // ponytail: student self-delete only — caller enforces userId match

@@ -1,12 +1,16 @@
+import { connection } from "next/server";
 import { requireRole } from "@/lib/session";
 import { getAllComplaints, markComplaintsSeenByWarden, serializeComplaint } from "@/lib/complaints";
 import SignOutButton from "../SignOutButton";
 import WardenQueue from "./WardenQueue";
 import WardenStats from "./WardenStats";
 
+// caveman: blocking route. inbox data, no prerender.
 export const instant = false;
 
 export default async function WardenDashboard() {
+  // caveman: inbox data. wait for request, no static cache.
+  await connection();
   const session = await requireRole("warden");
 
   // ponytail: opening inbox = seeing it — mark seen, then load queue

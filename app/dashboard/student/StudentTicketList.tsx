@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { SerializedComplaint } from "@/lib/complaint-types";
 
@@ -27,6 +27,18 @@ export default function StudentTicketList({
   const router = useRouter();
   const [tickets, setTickets] = useState(initial);
   const [deleting, setDeleting] = useState<string | null>(null);
+  // caveman: last seen signature. refresh only on real change, no loop.
+  const sigRef = useRef(
+    JSON.stringify(initial.map((c) => c._id + c.status + c.updatedAt))
+  );
+  // impeccable: IDs whose status just changed — one flash, then clear.
+  const [flashIds, setFlashIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (flashIds.size === 0) return;
+    const t = setTimeout(() => setFlashIds(new Set()), 1700);
+    return () => clearTimeout(t);
+  }, [flashIds]);
 
   useEffect(() => {
     let stop = false;
@@ -35,11 +47,32 @@ export default function StudentTicketList({
         const res = await fetch("/api/complaints/mine", { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
-        if (!stop && Array.isArray(data.complaints)) setTickets(data.complaints);
+        if (!stop && Array.isArray(data.complaints)) {
+          const fresh: SerializedComplaint[] = data.complaints;
+          const freshSig = JSON.stringify(
+            fresh.map((c) => c._id + c.status + c.updatedAt)
+          );
+          if (freshSig !== sigRef.current) {
+            // caveman: diff old vs new status. flash changed rows.
+            setTickets((prev) => {
+              const prevById = new Map(prev.map((p) => [p._id, p.status]));
+              const changed = fresh
+                .filter((c) => prevById.has(c._id) && prevById.get(c._id) !== c.status)
+                .map((c) => c._id);
+              if (changed.length > 0) setFlashIds(new Set(changed));
+              return fresh;
+            });
+            sigRef.current = freshSig;
+            router.refresh();
+          } else {
+            setTickets(fresh);
+          }
+        }
       } catch {
         // ponytail: poll failure = keep stale list, next tick retries
       }
     }
+    poll();
     const t = setInterval(() => {
       if (!document.hidden) poll();
     }, 5000);
@@ -47,7 +80,7 @@ export default function StudentTicketList({
       stop = true;
       clearInterval(t);
     };
-  }, []);
+  }, [router]);
 
   async function onDelete(id: string) {
     if (!confirm("Delete this ticket? Warden will no longer see it.")) return;
@@ -83,8 +116,13 @@ export default function StudentTicketList({
     <ul className="mt-4 divide-y divide-[var(--hairline-soft)]">
       {tickets.map((c) => {
         const st = STATUS_STYLE[c.status] ?? STATUS_STYLE.open;
+        // impeccable: motion marks the moment. flash only changed row.
+        const flashed = flashIds.has(c._id);
         return (
-          <li key={c._id} className="py-3 first:pt-0 last:pb-0">
+          <li
+            key={c._id}
+            className={`py-3 first:pt-0 last:pb-0 ${flashed ? "ticket-flash" : ""}`}
+          >
             <div className="flex items-center gap-2">
               <span className="rounded-[4px] bg-[var(--surface-2)] px-1.5 py-0.5 text-[11px] font-medium">
                 {c.category}
